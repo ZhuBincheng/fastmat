@@ -1,0 +1,199 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" id="index">
+	<head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		
+        <title>
+			fastMat Homepage
+		</title>
+        
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript" src="Hyphenator.js"></script>
+        <script type="text/javascript">
+            Hyphenator.run();
+        </script>
+
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+            });
+            MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+                MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
+                    data.math = data.math.replace(/\u00AD/g,"");
+                });
+            });
+          </script>
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+        
+
+        
+        <link rel="stylesheet" href="github.css">
+        <script src="highlight/highlight.pack.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+
+	</head>
+	<body class="hyphenate">
+        <div class="content">
+            <h1>fastmat</h1> 
+            <p style="text-align: center; color:#c94c4c; margin: 2em"><i>A Python Package for Fast Linear Transformations</i></p>
+            <h2><a name="">Introduction</a></h2>
+            <div class="menu">
+                <ul>
+                    <li><a href="#">Introduction</a></li>
+                    <ul>
+                        <li><a href="#">Matrix Types</a></li>
+                        <li><a href="#">Algorithms</a></li>
+                    </ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Examples</a></li>
+                    <ul>
+                        <li><a href="#">Matrix-Vector Multiplication</a></li>
+                        <li><a href="#">Block Matrix</a></li>
+                        <li><a href="#">Edge Detection</a></li>
+                    </ul>
+                    <li><a href="#">Download</a></li>
+                    <ul>
+                        <li><a href="#">Linux</a></li>
+                        <li><a href="#">Mac</a></li>
+                        <li><a href="#">Windows</a></li>
+                    </ul>
+                    <li><a href="#">Contribute</a></li>
+                    <li><a href="#">Credits</a></li>
+                </ul>
+            </div>
+            <p>
+            In applications occuring in engineering or signal processing there are often two ways one deals with linear transforms, which are two side of the same thing. In papers and theoretical derivations one is mainly focused on algebraic properties of the involved matrices, whereas when it comes to numerical simulations, one is forced to take a different view on the matrices and the corresponding linear transforms. In the first case maybe some structural assumptions are made or come out of
+            the analysis. The second case takes numerical algorithms into account to make certain computations more efficient or at least tractable.
+            </p>
+            <p>
+            Gapping this discrepancy is one of fastmat's purposes. It unifies an intuitive mathematical notation while still performing fast algorithms enabled by exploiting structural knowledge about the matrices involved.
+            </p>
+
+            <h2><a name="">Features</a></h2>
+            <h3><a name="">Matrix Types</a></h3>
+            Essentially there are two types of matrices in fastmat. At first there are the so called <b>basic types</b> that make up actual transform, like a Fourier Transform. On the other hand, we have so called <b>meta types</b> which represent the composition of one or more already defined matrices to more sophisticated structures. More precisely, the realize mappings on the space, or the cartesian product of spaces, of linear transforms to other spaces of linear transforms. For example, the Product $M_1 \cdot \ldots \cdot M_k$ of matrices $M_i \in \mathbb{C}^{n_i \times m_i}$ with $i = 1, \dots, k$ maps to $\mathbb{C}^{n_1 \times m_k}$.
+            <ul>
+                <li><b>Basic Types:</b> Circulant Matrix, Diagonal Matrix, Identity Matrix, Fourier Transform, Hadamard Transform, Sparse matrix, Toeplitz, Zero Transform
+                    <li><b>Meta Types:</b> Block Diagonal, Block Matrix, Kronecker Product, Linear Combination, Partial Matrix, Polynomial Matrix, Power,  Product, (conjugate, Hermitian) Transpose of a Matrix</li>                
+            </ul>
+            <h3><a name="">Algorithms</a></h3>
+            <ul>
+                <li><b>Sparse Recovery:</b> Orthogonal Matching Pursuit, Iterative Soft Thresholding Algorithm</li>
+                <li><b>Systems of Linear Equations:</b> Conjugate Gradient</li>
+                <li><b></b></li>
+            </ul>
+
+            <h2><a name="">Examples</a></h2>
+            In general fastmat is really easy to use and the following short examples give a glimpse on how to incorporate its functionality into your own projects.
+            <h3><a name="">Matrix-Vector Multiplication</a></h3>
+            The fast multiplication of a matrix to a vector is the key functionality in fastmat. Here the multiplication $M \cdot x$ is called the <b>forward</b> transform, whereas $M^{\mathrm{H}} \cdot x$ is the so called <b>backward</b> transform. Both methods are implemented for every type fastmat provides.
+            <pre><code class="python"># import the packages
+import numpy.random as npr
+import fastmat as fm
+
+# define the involved sizes
+N,k = 25,10
+
+# define a random vector
+vecX = npr.randn(2**N)
+
+# define a random matrix
+matX = npr.randn(2**N,k)
+
+# define a hadamard matrix
+H = fm.Hadamard(N)
+
+# apply the matrices
+vecY1 = H.forward(vecX)
+vecY2 = H.backward(vecX)
+matY1 = H.forward(matX)
+matY2 = H.backward(matX)
+            </code></pre>
+			<p>It is worth noting, that the matrix above is approximately $1.13$ petabytes in size if you used $1$ byte of storage for each element.</p>
+            
+            <h3><a name="">Block Matrix</a></h3>
+            In the following we define a matrix, that consists of four blocks, where two are circulant, one is a Fourier matrix and the last one is a diagonal matrix. 
+            <pre><code class="python"># import the package
+import fastmat as fm
+
+# define the blocks
+A = fm.Circulant(x_A)
+B = fm.Circulant(x_B)
+C = fm.Fourier(n)
+D = fm.Diag(x_D)
+    
+# define the block 
+# matrix row-wise
+M = fm.Blocks([A,B],[C,D])
+            </code></pre>
+            <p>In other words, we get</p>
+            $$M = \begin{pmatrix}A & B \\ C & D\end{pmatrix}.$$
+            <p>The implementation present in fastMat allows to still exploit structural knowledge of the submatrices $A$,$B$,$C$ and $D$, which results in a fast transformation of $M$.</p>
+            <h3><a name="">Edge Detection</a></h3>
+            Edge detection in its simplest form can be as easy as convolving with a kernel that is highly correlated to jumps in a given signal.
+<pre><code class="python"># import the packages
+import fastmat as fm
+from scipy import ndimage
+
+# read the image
+arrHead = ndimage.imread("head.png",flatten=True)
+
+# extract the dimensions
+numN,numM = arrHead.shape
+
+# create the correlation vector
+c = np.zeros(numN)
+c[0] = 0.5
+c[1] = -0.5
+
+# create the correlation matrix
+fmatL = fm.Circulant(c)
+
+# calculate the gradient in the directions
+# using the efficient way
+s = time.time()
+arrEdgesX = np.abs(fmatL.forward(arrHead))
+arrEdgesY = np.abs(fmatL.forward(arrHead.T)).T
+
+# calculate the total gradient
+arrEdges = np.sqrt(arrEdgesX**2 + arrEdgesY**2)
+            </code></pre>
+            <p>A more extensive demonstration of edge detection can be found in the demos folder of the code repository, where also a comparison to the intuitive implementation is made.</p>
+            <h2><a name="">Download</a></h2>
+            <h3><a name="">Linux</a></h3>
+            <h3><a name="">Mac</a></h3>
+            <h3><a name="">Windows</a></h3>
+            
+            
+            
+            
+            <h2><a name="">Contribute</a></h2>
+            <p>
+            There are many ways you as an individual can contribute. We are happy about feature requests, bug reports and of course contributions in form of additional features. 
+            </p>
+
+            
+            
+            
+            <h3><a name="">Bugs or Requests</a></h3> 
+            <p>
+            This is a very nice text and I really look forward to writing something useful here.
+            </p>
+           
+
+
+
+
+            <h3><a name="">New Features</a></h3>
+            <h2><a name="">Credits</a></h2>
+            We make excessive use of <a href="" target="_blank">Numpy</a>, <a href="" target="_blank">Scipy</a> and <a href="" target="_blank">Cython</a> for implementing fastmat. For organization we use <a href="" target="_blank">Redmine</a> and <a href="" target="_blank">Gitlab</a>. For documentation we use <a href="" target="_blank">LaTeX</a> and for syntax highlighting on the web <a href="https://highlightjs.org/" target="_blank">highlight.js</a>, while <a href=""
+                target="_blank">Mathjax</a> helps us to render formulas on the website.
+
+        </div>
+
+
+	</body>
+</html>
+	
