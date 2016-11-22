@@ -54,10 +54,9 @@
                         <li><a href="#">Edge Detection</a></li>
                     </ul>
                     <li><a href="#">Download</a></li>
-                    <ul>
-                        <li><a href="#">Linux</a></li>
-                        <li><a href="#">Mac</a></li>
-                        <li><a href="#">Windows</a></li>
+					<ul>
+                        <li><a href="#">Releases</a></li>
+                        <li><a href="#">Documentation</a></li>
                     </ul>
                     <li><a href="#">Contribute</a></li>
                     <li><a href="#">Credits</a></li>
@@ -68,21 +67,20 @@
             the analysis. The second case takes numerical algorithms into account to make certain computations more efficient or at least tractable.
             </p>
             <p>
-            Gapping this discrepancy is one of fastmat's purposes. It unifies an intuitive mathematical notation while still performing fast algorithms enabled by exploiting structural knowledge about the matrices involved.
+            Building a bridge between the two pillars is one of fastmat's purposes. It unifies an intuitive mathematical notation while still performing fast algorithms enabled by exploiting structural knowledge about the matrices involved.
             </p>
 
             <h2><a name="">Features</a></h2>
             <h3><a name="">Matrix Types</a></h3>
             Essentially there are two types of matrices in fastmat. At first there are the so called <b>basic types</b> that make up actual transform, like a Fourier Transform. On the other hand, we have so called <b>meta types</b> which represent the composition of one or more already defined matrices to more sophisticated structures. More precisely, the realize mappings on the space, or the cartesian product of spaces, of linear transforms to other spaces of linear transforms. For example, the Product $M_1 \cdot \ldots \cdot M_k$ of matrices $M_i \in \mathbb{C}^{n_i \times m_i}$ with $i = 1, \dots, k$ maps to $\mathbb{C}^{n_1 \times m_k}$.
             <ul>
-                <li><b>Basic Types:</b> Circulant Matrix, Diagonal Matrix, Identity Matrix, Fourier Transform, Hadamard Transform, Sparse matrix, Toeplitz, Zero Transform
+                <li><b>Basic Types:</b> Circulant Matrix, Diagonal Matrix, Identity Matrix, Fourier Transform, Hadamard Transform, Sparse matrix, Toeplitz Matrix, Zero Matrix
                     <li><b>Meta Types:</b> Block Diagonal, Block Matrix, Kronecker Product, Linear Combination, Partial Matrix, Polynomial Matrix, Power,  Product, (conjugate, Hermitian) Transpose of a Matrix</li>                
             </ul>
             <h3><a name="">Algorithms</a></h3>
             <ul>
                 <li><b>Sparse Recovery:</b> Orthogonal Matching Pursuit, Iterative Soft Thresholding Algorithm</li>
                 <li><b>Systems of Linear Equations:</b> Conjugate Gradient</li>
-                <li><b></b></li>
             </ul>
 
             <h2><a name="">Examples</a></h2>
@@ -111,7 +109,7 @@ vecY2 = H.backward(vecX)
 matY1 = H.forward(matX)
 matY2 = H.backward(matX)
             </code></pre>
-			<p>It is worth noting, that the matrix above is approximately $1.13$ petabytes in size if you used $1$ byte of storage for each element.</p>
+			<p>It is worth noting, that the Hadamard matrix above is approximately $1.13$ petabytes in size if you used $1$ byte of storage for each element.</p>
             
             <h3><a name="">Block Matrix</a></h3>
             In the following we define a matrix, that consists of four blocks, where two are circulant, one is a Fourier matrix and the last one is a diagonal matrix. 
@@ -162,31 +160,34 @@ arrEdges = np.sqrt(arrEdgesX**2 + arrEdgesY**2)
             </code></pre>
             <p>A more extensive demonstration of edge detection can be found in the demos folder of the code repository, where also a comparison to the intuitive implementation is made.</p>
             <h2><a name="">Download</a></h2>
-            <h3><a name="">Linux</a></h3>
-            <h3><a name="">Mac</a></h3>
-            <h3><a name="">Windows</a></h3>
-            
-            
-            
-            
-            <h2><a name="">Contribute</a></h2>
+            <p>
+           We currently only provide source downloads you have to compile yourself with the makefile present in the root directory.
+            </p>
+            <h3><a name="">Releases</a></h3>
+            <p>Here we only list our stable tags for convenience of new users. We always recommend using the latest stable version avaiable.</p>
+            <ul>
+                <li>Version 0.1 (12-2016)</li>
+			</ul>
+			<p>If you are intersted in the progress on the bleeding edge, you are welcome to checkout our repository on <a href="" target="_blank">Github</a>.
+            <h3><a name="">Documentation</a></h3>
+            <p>If you are interested in the current features and performance of fastmat to determine whether it suits your project, you are welcome to download the documentation below. On the other hand, it is also served with the releases themselves.</p>
+            <ul>
+                <li>Version 0.1 (12-2016)</li>
+			</ul>
+            <h2><a name="">Contributions</a></h2>
             <p>
             There are many ways you as an individual can contribute. We are happy about feature requests, bug reports and of course contributions in form of additional features. 
             </p>
 
-            
-            
-            
             <h3><a name="">Bugs or Requests</a></h3> 
             <p>
-            This is a very nice text and I really look forward to writing something useful here.
+            If you found anything is missing in our current implementation or is just plain wrong, we first are very sorry for that! Furthermore, we encourage you to open an issue on <a href="" target="_blank">Github</a>, where you state your problem or the error and we will get to it as soon as possible.
             </p>
            
 
-
-
-
-            <h3><a name="">New Features</a></h3>
+			<h3><a name="">New Features</a></h3>
+            If you hacked away on a new feature for our package, we are happy to see your merge request on <a href="" target="_blank">Github</a>, which explicitly encourages everyone to get their hands dirty!
+            
             <h2><a name="">Credits</a></h2>
             We make excessive use of <a href="" target="_blank">Numpy</a>, <a href="" target="_blank">Scipy</a> and <a href="" target="_blank">Cython</a> for implementing fastmat. For organization we use <a href="" target="_blank">Redmine</a> and <a href="" target="_blank">Gitlab</a>. For documentation we use <a href="" target="_blank">LaTeX</a> and for syntax highlighting on the web <a href="https://highlightjs.org/" target="_blank">highlight.js</a>, while <a href=""
                 target="_blank">Mathjax</a> helps us to render formulas on the website.
