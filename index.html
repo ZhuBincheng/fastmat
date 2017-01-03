@@ -38,28 +38,33 @@
         <div class="content">
             <h1>fastmat</h1> 
             <p style="text-align: center; color:#c94c4c; margin: 2em"><i>A Python Package for Fast Linear Transformations</i></p>
-            <h2><a name="">Introduction</a></h2>
+            <h2><a name="intro">Introduction</a></h2>
             <div class="menu">
                 <ul>
-                    <li><a href="#">Introduction</a></li>
-                    <ul>
-                        <li><a href="#">Matrix Types</a></li>
-                        <li><a href="#">Algorithms</a></li>
-                    </ul>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Examples</a></li>
-                    <ul>
-                        <li><a href="#">Matrix-Vector Multiplication</a></li>
-                        <li><a href="#">Block Matrix</a></li>
-                        <li><a href="#">Edge Detection</a></li>
-                    </ul>
-                    <li><a href="#">Download</a></li>
+                    <li><a href="#intro">Introduction</a></li>
+                    <li><a href="#features">Features</a></li>
 					<ul>
-                        <li><a href="#">Releases</a></li>
-                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#types">Matrix Types</a></li>
+                        <li><a href="#algos">Algorithms</a></li>
                     </ul>
-                    <li><a href="#">Contribute</a></li>
-                    <li><a href="#">Credits</a></li>
+                    <li><a href="#examples">Examples</a></li>
+                    <ul>
+                        <li><a href="#mvm">Matrix-Vector Multiplication</a></li>
+                        <li><a href="#block">Block Matrix</a></li>
+                        <li><a href="#edges">Edge Detection</a></li>
+                    </ul>
+                    <li><a href="#getit">Get It</a></li>
+					<ul>
+						<li><a href="#cite">Citation</a></li>
+                        <li><a href="#release">Releases</a></li>
+                        <li><a href="#docs">Documentation</a></li>
+                    </ul>
+                    <li><a href="#contrib">Contribute</a></li>
+					<ul>
+						<li><a href="#bugs">Bugs or Requests</a></li>
+						<li><a href="#newfeat">New Features</a></li>
+					</ul>
+                    <li><a href="#credits">Credits</a></li>
                 </ul>
             </div>
             <p>
@@ -70,35 +75,44 @@
             Building a bridge between the two pillars is one of fastmat's purposes. It unifies an intuitive mathematical notation while still performing fast algorithms enabled by exploiting structural knowledge about the matrices involved.
             </p>
 
-            <h2><a name="">Features</a></h2>
-            <h3><a name="">Matrix Types</a></h3>
+            <h2><a name="features">Features</a></h2>
+			
+			
+            <h3><a name="types">Matrix Types</a></h3>
             Essentially there are two types of matrices in fastmat. At first there are the so called <b>basic types</b> that make up actual transform, like a Fourier Transform. On the other hand, we have so called <b>meta types</b> which represent the composition of one or more already defined matrices to more sophisticated structures. More precisely, the realize mappings on the space, or the cartesian product of spaces, of linear transforms to other spaces of linear transforms. For example, the Product $M_1 \cdot \ldots \cdot M_k$ of matrices $M_i \in \mathbb{C}^{n_i \times m_i}$ with $i = 1, \dots, k$ maps to $\mathbb{C}^{n_1 \times m_k}$.
             <ul>
                 <li><b>Basic Types:</b> Circulant Matrix, Diagonal Matrix, Identity Matrix, Fourier Transform, Hadamard Transform, Sparse matrix, Toeplitz Matrix, Zero Matrix
                     <li><b>Meta Types:</b> Block Diagonal, Block Matrix, Kronecker Product, Linear Combination, Partial Matrix, Polynomial Matrix, Power,  Product, (conjugate, Hermitian) Transpose of a Matrix</li>                
             </ul>
-            <h3><a name="">Algorithms</a></h3>
+			
+			
+			
+            <h3><a name="algos">Algorithms</a></h3>
             <ul>
                 <li><b>Sparse Recovery:</b> Orthogonal Matching Pursuit, Iterative Soft Thresholding Algorithm</li>
                 <li><b>Systems of Linear Equations:</b> Conjugate Gradient</li>
             </ul>
 
-            <h2><a name="">Examples</a></h2>
+			
+			
+            <h2><a name="examples">Examples</a></h2>
             In general fastmat is really easy to use and the following short examples give a glimpse on how to incorporate its functionality into your own projects.
-            <h3><a name="">Matrix-Vector Multiplication</a></h3>
+			
+			
+            <h3><a name="mvm">Matrix-Vector Multiplication</a></h3>
             The fast multiplication of a matrix to a vector is the key functionality in fastmat. Here the multiplication $M \cdot x$ is called the <b>forward</b> transform, whereas $M^{\mathrm{H}} \cdot x$ is the so called <b>backward</b> transform. Both methods are implemented for every type fastmat provides.
             <pre><code class="python"># import the packages
 import numpy.random as npr
 import fastmat as fm
 
 # define the involved sizes
-N,k = 25,10
-
+N, k = 25, 10
+n = 2 ** N
 # define a random vector
-vecX = npr.randn(2**N)
+vecX = npr.randn(n)
 
 # define a random matrix
-matX = npr.randn(2**N,k)
+matX = npr.randn(n, k)
 
 # define a hadamard matrix
 H = fm.Hadamard(N)
@@ -111,7 +125,10 @@ matY2 = H.backward(matX)
             </code></pre>
 			<p>It is worth noting, that the Hadamard matrix above is approximately $1.13$ petabytes in size if you used $1$ byte of storage for each element.</p>
             
-            <h3><a name="">Block Matrix</a></h3>
+			<div style="width: 100%; text-align: center"><img src="gfx/hadamard.png"></div>
+			
+			
+            <h3><a name="block">Block Matrix</a></h3>
             In the following we define a matrix, that consists of four blocks, where two are circulant, one is a Fourier matrix and the last one is a diagonal matrix. 
             <pre><code class="python"># import the package
 import fastmat as fm
@@ -128,15 +145,18 @@ M = fm.Blocks([A,B],[C,D])
             </code></pre>
             <p>In other words, we get</p>
             $$M = \begin{pmatrix}A & B \\ C & D\end{pmatrix}.$$
-            <p>The implementation present in fastMat allows to still exploit structural knowledge of the submatrices $A$,$B$,$C$ and $D$, which results in a fast transformation of $M$.</p>
-            <h3><a name="">Edge Detection</a></h3>
+            <p>The implementation present in fastmat allows to still exploit structural knowledge of the submatrices $A$,$B$,$C$ and $D$, which results in a fast transformation of $M$.</p>
+			
+			
+			
+            <h3><a name="edges">Edge Detection</a></h3>
             Edge detection in its simplest form can be as easy as convolving with a kernel that is highly correlated to jumps in a given signal.
 <pre><code class="python"># import the packages
 import fastmat as fm
 from scipy import ndimage
 
 # read the image
-arrHead = ndimage.imread("head.png",flatten=True)
+arrHead = ndimage.imread("head.png", flatten=True)
 
 # extract the dimensions
 numN,numM = arrHead.shape
@@ -156,40 +176,50 @@ arrEdgesX = np.abs(fmatL.forward(arrHead))
 arrEdgesY = np.abs(fmatL.forward(arrHead.T)).T
 
 # calculate the total gradient
-arrEdges = np.sqrt(arrEdgesX**2 + arrEdgesY**2)
+arrEdges = np.sqrt(arrEdgesX ** 2 + arrEdgesY ** 2)
             </code></pre>
             <p>A more extensive demonstration of edge detection can be found in the demos folder of the code repository, where also a comparison to the intuitive implementation is made.</p>
-            <h2><a name="">Download</a></h2>
+			
+			
+            <h2><a name="getit">Get It</a></h2>
             <p>
            We currently only provide source downloads you have to compile yourself with the makefile present in the root directory.
             </p>
-            <h3><a name="">Releases</a></h3>
+			<h3><a name="cite">Citation</a></h3>
+			<p>We would be very happy if you could cite fastmat with the paper available on a preprint server <a href="" target="_blank">here</a>, if you should use it in your own published work.
+				
+			
+            <h3><a name="release">Releases</a></h3>
             <p>Here we only list our stable tags for convenience of new users. We always recommend using the latest stable version avaiable.</p>
             <ul>
-                <li>Version 0.1 (12-2016)</li>
+                <li>Version 0.1 (01-2017)</li>
 			</ul>
 			<p>If you are intersted in the progress on the bleeding edge, you are welcome to checkout our repository on <a href="" target="_blank">Github</a>.
-            <h3><a name="">Documentation</a></h3>
+				
+				
+            <h3><a name="docs">Documentation</a></h3>
             <p>If you are interested in the current features and performance of fastmat to determine whether it suits your project, you are welcome to download the documentation below. On the other hand, it is also served with the releases themselves.</p>
             <ul>
-                <li>Version 0.1 (12-2016)</li>
+                <li>Version 0.1 (01-2017)</li>
 			</ul>
-            <h2><a name="">Contributions</a></h2>
+			
+			
+            <h2><a name="contrib">Contributions</a></h2>
             <p>
             There are many ways you as an individual can contribute. We are happy about feature requests, bug reports and of course contributions in form of additional features. 
             </p>
 
-            <h3><a name="">Bugs or Requests</a></h3> 
+            <h3><a name="bugs">Bugs or Requests</a></h3> 
             <p>
             If you found anything is missing in our current implementation or is just plain wrong, we first are very sorry for that! Furthermore, we encourage you to open an issue on <a href="" target="_blank">Github</a>, where you state your problem or the error and we will get to it as soon as possible.
             </p>
            
 
-			<h3><a name="">New Features</a></h3>
+			<h3><a name="newfeat">New Features</a></h3>
             If you hacked away on a new feature for our package, we are happy to see your merge request on <a href="" target="_blank">Github</a>, which explicitly encourages everyone to get their hands dirty!
             
-            <h2><a name="">Credits</a></h2>
-            We make excessive use of <a href="" target="_blank">Numpy</a>, <a href="" target="_blank">Scipy</a> and <a href="" target="_blank">Cython</a> for implementing fastmat. For organization we use <a href="" target="_blank">Redmine</a> and <a href="" target="_blank">Gitlab</a>. For documentation we use <a href="" target="_blank">LaTeX</a> and for syntax highlighting on the web <a href="https://highlightjs.org/" target="_blank">highlight.js</a>, while <a href=""
+            <h2><a name="credits">Credits</a></h2>
+            We make excessive use of <a href="http://www.numpy.org/" target="_blank">Numpy</a>, <a href="https://www.scipy.org/" target="_blank">Scipy</a> and <a href="http://cython.org/" target="_blank">Cython</a> for implementing fastmat. For organization we use <a href="http://www.redmine.org/" target="_blank">Redmine</a> and <a href="https://about.gitlab.com/" target="_blank">Gitlab</a>. For documentation we use <a href="https://www.latex-project.org/" target="_blank">LaTeX</a> and for syntax highlighting on the web <a href="https://highlightjs.org/" target="_blank">highlight.js</a>, while <a href="https://www.mathjax.org/"
                 target="_blank">Mathjax</a> helps us to render formulas on the website.
 
         </div>
