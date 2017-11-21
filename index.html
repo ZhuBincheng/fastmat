@@ -1,13 +1,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" id="index">
 	<head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		
+
         <title>
 			fastMat Homepage
 		</title>
-        
+
         <link rel="stylesheet" type="text/css" href="styles.css">
-        
+
         <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
 
         <script type="text/javascript" src="Hyphenator.js"></script>
@@ -26,9 +26,9 @@
             });
           </script>
         <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-        
 
-        
+
+
         <link rel="stylesheet" href="github.css">
         <script src="highlight/highlight.pack.js"></script>
         <script>hljs.initHighlightingOnLoad();</script>
@@ -36,7 +36,7 @@
 	</head>
 	<body class="hyphenate">
         <div class="content">
-            <h1>fastmat</h1> 
+            <h1>fastmat</h1>
             <p style="text-align: center; color:#c94c4c; margin: 2em"><i>A Python Package for Fast Linear Transformations</i></p>
             <h2><a name="intro">Introduction</a></h2>
             <div class="menu">
@@ -77,29 +77,29 @@
             </p>
 
             <h2><a name="features">Features</a></h2>
-			
-			
+
+
             <h3><a name="types">Matrix Types</a></h3>
             Essentially there are two types of matrices in fastmat. At first there are the so called <b>basic types</b> that make up actual transform, like a Fourier Transform. On the other hand, we have so called <b>meta types</b> which represent the composition of one or more already defined matrices to more sophisticated structures. More precisely, the realize mappings on the space, or the cartesian product of spaces, of linear transforms to other spaces of linear transforms. For example, the Product $M_1 \cdot \ldots \cdot M_k$ of matrices $M_i \in \mathbb{C}^{n_i \times m_i}$ with $i = 1, \dots, k$ maps to $\mathbb{C}^{n_1 \times m_k}$.
             <ul>
                 <li><b>Basic Types:</b> Circulant Matrix, Diagonal Matrix, Identity Matrix, Fourier Transform, Hadamard Transform, Sparse matrix, Toeplitz Matrix, Zero Matrix
-                    <li><b>Meta Types:</b> Block Diagonal, Block Matrix, Kronecker Product, Linear Combination, Partial Matrix, Polynomial Matrix, Power,  Product, (conjugate, Hermitian) Transpose of a Matrix</li>                
+                    <li><b>Meta Types:</b> Block Diagonal, Block Matrix, Kronecker Product, Linear Combination, Partial Matrix, Polynomial Matrix, Power,  Product, (conjugate, Hermitian) Transpose of a Matrix</li>
             </ul>
-			
-			
-			
+
+
+
             <h3><a name="algos">Algorithms</a></h3>
             <ul>
                 <li><b>Sparse Recovery:</b> Orthogonal Matching Pursuit, Iterative Soft Thresholding Algorithm</li>
                 <li><b>Linear Algebra:</b>Method of Conjugate Gradients, Largest Singular Value, Largest Eigenvalue</li>
             </ul>
 
-			
-			
+
+
             <h2><a name="examples">Examples</a></h2>
             In general fastmat is really easy to use and the following short examples give a glimpse on how to incorporate its functionality into your own projects.
-			
-			
+
+
             <h3><a name="mvm">Matrix-Vector Multiplication</a></h3>
             The fast multiplication of a matrix to a vector is the key functionality in fastmat. Here the multiplication $M \cdot x$ is called the <b>forward</b> transform, whereas $M^{\mathrm{H}} \cdot x$ is the so called <b>backward</b> transform. Both methods are implemented for every type fastmat provides.
             <pre><code class="python"># import the packages
@@ -125,12 +125,12 @@ matY1 = Hd   * matX
 matY2 = Hd.H * matX
             </code></pre>
 			<p>It is worth noting, that the Hadamard matrix above is approximately $1.13$ petabytes in size if you used $1$ byte of storage for each element.</p>
-            
+
 			<div style="width: 100%; text-align: center"><img src="gfx/hadamard.png"></div>
-			
-			
+
+
             <h3><a name="block">Block Matrix</a></h3>
-            In the following we define a matrix, that consists of four blocks, where two are circulant, one is a Fourier matrix and the last one is a diagonal matrix. 
+            In the following we define a matrix, that consists of four blocks, where two are circulant, one is a Fourier matrix and the last one is a diagonal matrix.
             <pre><code class="python"># import the package
 import fastmat as fm
 
@@ -139,17 +139,17 @@ A = fm.Circulant(x_A)
 B = fm.Circulant(x_B)
 C = fm.Fourier(n)
 D = fm.Diag(x_D)
-    
-# define the block 
+
+# define the block
 # matrix row-wise
 M = fm.Blocks([A,B],[C,D])
             </code></pre>
             <p>In other words, we get</p>
             $$M = \begin{pmatrix}A & B \\ C & D\end{pmatrix}.$$
             <p>The implementation present in fastmat allows to still exploit structural knowledge of the submatrices $A,$ $B,$ $C$ and $D,$ which results in a fast transformation of $M$.</p>
-			
-			
-			
+
+
+
             <h3><a name="edges">Edge Detection</a></h3>
             Edge detection in its simplest form can be as easy as convolving with a kernel that is highly correlated to jumps in a given signal.
 <pre><code class="python"># import the packages
@@ -180,55 +180,57 @@ arrEdgesY = np.abs(fmatL * arrHead.T).T
 arrEdges = np.sqrt(arrEdgesX ** 2 + arrEdgesY ** 2)
             </code></pre>
             <p>A more extensive demonstration of edge detection can be found in the demos folder of the code repository, where also a comparison to the intuitive implementation is made.</p>
-			
-			
+
+
             <h2><a name="getit">Get It</a></h2>
             <p>
            We currently only provide source downloads you have to compile yourself with the makefile present in the root directory. The complete repository can be found on <a href="https://github.com/EMS-TU-Ilmenau/fastmat" target="_blank">Github</a>.
             </p>
 			<h3><a name="cite">Citation</a></h3>
-			<p>We would be very happy if you could cite fastmat with the paper available on a preprint server <a href="" target="_blank">here</a> (tba), if you should use it in your own published work.
-				
-			
+			<p>We would be very happy if you could cite fastmat with the paper available on a preprint server <a href="https://arxiv.org/abs/1710.09578" target="_blank">here</a>, if you should use it in your own published work.
+
+
             <h3><a name="release">Releases</a></h3>
             <p>Here we only list our stable tags for convenience of new users. We always recommend using the latest stable version avaiable.</p>
             <ul>
+			<li>Version 0.1.1 (11-2017) (<a href="https://github.com/EMS-TU-Ilmenau/fastmat/archive/0.1.1.zip">Source</a>)</li>
             <li>Version 0.1 (08-2017) (<a href="https://github.com/EMS-TU-Ilmenau/fastmat/archive/0.1.zip">Source</a>)</li>
             <li>Version 0.1b4 (07-2017) (<a href="https://github.com/EMS-TU-Ilmenau/fastmat/archive/0.1b4.zip">Source</a>)</li>
 			</ul>
 			<p>If you are intersted in the progress on the bleeding edge, you are welcome to checkout our repository on <a href="https://github.com/EMS-TU-Ilmenau/fastmat" target="_blank">Github</a>, whereas you can also have a complete list of all releases <a href="https://github.com/EMS-TU-Ilmenau/fastmat/releases" target="_blank">here</a>.
-				
-				
+
+
             <h3><a name="docs">Documentation</a></h3>
             <p>If you are interested in the current features and performance of fastmat to determine whether it suits your project, you are welcome to download the documentation below.</p>
             <ul>
-            <li>Version 0.1 (08-2017) (<a href="https://github.com/EMS-TU-Ilmenau/fastmat/releases/download/0.1/fastmatDoc.pdf">PDF</a>)</li>
+			<li>Version 0.1.1 (11-2017) (<a href="https://github.com/EMS-TU-Ilmenau/fastmat/releases/download/0.1.1/Documentation.pdf">PDF</a>)</li>
+			<li>Version 0.1 (08-2017) (<a href="https://github.com/EMS-TU-Ilmenau/fastmat/releases/download/0.1/fastmatDoc.pdf">PDF</a>)</li>
             <li>Version 0.1b4 (07-2017) (<a href="https://github.com/EMS-TU-Ilmenau/fastmat/releases/download/0.1b4/fastmatDoc.pdf">PDF</a>)</li>
 			</ul>
-			
+
 			<h3><a name="pub">Public Appearances</a></h3>
 			<p>Sometimes we also get out in the wild and present the package. The talks we held can be found below.</p>
 			<ul>
 			<li>EurcScipy 2017 Erlangen (<a href="https://github.com/EMS-TU-Ilmenau/fastmat/releases/download/0.1/082017euroscipy.pdf" target="_blank">PDF</a>, <a href="https://www.youtube.com/watch?v=dq5bLgLGae8" target="_blank">Youtube</a>)</li>
 			</ul>
-			
+
             <h2><a name="contrib">Contributions</a></h2>
             <p>
-            There are many ways you as an individual can contribute. We are happy about feature requests, bug reports and of course contributions in form of additional features. 
+            There are many ways you as an individual can contribute. We are happy about feature requests, bug reports and of course contributions in form of additional features.
             </p>
 
-            <h3><a name="bugs">Bugs or Requests</a></h3> 
+            <h3><a name="bugs">Bugs or Requests</a></h3>
             <p>
             If you found anything is missing in our current implementation or is just plain wrong, we first are very sorry for that! Furthermore, we encourage you to open an issue on<a href="https://github.com/EMS-TU-Ilmenau/fastmat/issues" target="_blank">Github</a>, where you state your problem or the error and we will get to it as soon as possible.
             </p>
-           
+
 
 			<h3><a name="newfeat">New Features</a></h3>
             If you hacked away on a new feature for our package, we are happy to see your merge request on <a href="https://github.com/EMS-TU-Ilmenau/fastmat" target="_blank">Github</a>, which explicitly encourages everyone to get their hands dirty!
-            
+
             <h2><a name="credits">Affiliations and Credits</a></h2>
             <p>Currently the project is jointly maintained by Sebastian Semper and Christoph Wagner at the <a href="https://www.tu-ilmenau.de/ems/" target="_blank">EMS group</a> at <a href="https://www.tu-ilmenau.de/" target="_blank">TU Ilmenau</a>.</p>
-            
+
             <p>We make excessive use of <a href="http://www.numpy.org/" target="_blank">Numpy</a>, <a href="https://www.scipy.org/" target="_blank">Scipy</a> and <a href="http://cython.org/" target="_blank">Cython</a> for implementing fastmat. For organization we use <a href="http://www.redmine.org/" target="_blank">Redmine</a> and <a href="https://about.gitlab.com/" target="_blank">Gitlab</a>. For documentation we use <a href="https://www.latex-project.org/" target="_blank">LaTeX</a> and for syntax highlighting on the web <a href="https://highlightjs.org/" target="_blank">highlight.js</a>, while <a href="https://www.mathjax.org/"
                 target="_blank">Mathjax</a> helps us to render formulas on the website.</p>
 
@@ -237,4 +239,3 @@ arrEdges = np.sqrt(arrEdgesX ** 2 + arrEdgesY ** 2)
 
 	</body>
 </html>
-	
