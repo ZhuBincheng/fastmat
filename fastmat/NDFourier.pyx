@@ -43,7 +43,7 @@ cdef class NDFourier(Matrix):
     >>> n = 4
     >>>
     >>> # construct the matrix
-    >>> F = fm.NDFourier((n, n))
+    >>> F = fm.NDFourier(n, n)
 
     This yields a 2D Fourier matrix of size 16. As a library to provide the
     Fast Fourier Transform we used the one provided by NumPy [1]_.
@@ -71,7 +71,7 @@ cdef class NDFourier(Matrix):
         def __get__(self):
             return self._order
 
-    def __init__(self, order, **options):
+    def __init__(self, *order, **options):
         '''Initialize Matrix instance with a list of child matrices'''
 
         cdef intsize paddedSize
@@ -81,7 +81,7 @@ cdef class NDFourier(Matrix):
         cdef int maxStage = options.get('maxStage', 4)
 
         # store order of Fourier Transform
-        self._order = np.copy(np.array([*order]))
+        self._order = np.copy(np.squeeze(np.array(order)))
 
         # store number of dimensions to transform over
         self._numD = len(order)
@@ -240,7 +240,7 @@ cdef class NDFourier(Matrix):
                 # define constructor for test instances and naming of test
                 TEST.OBJECT     : NDFourier,
                 TEST.INITARGS   : lambda param:
-                [(param['numS'], param['numS'])],
+                [param['numS'], param['numS']],
                 TEST.INITKWARGS : {'optimize': 'optimize'},
                 TEST.TOL_POWER  : 3.,
                 TEST.NAMINGARGS : dynFormat("%d, optimize=%d", TEST.NUM_N,
@@ -254,15 +254,19 @@ cdef class NDFourier(Matrix):
         from .inspect import BENCH
         return {
             BENCH.COMMON: {
-                BENCH.FUNC_GEN  : (lambda c: NDFourier((c, c)))
+                BENCH.FUNC_GEN  : (lambda c: NDFourier(c, c)),
+                BENCH.FUNC_SIZE : (lambda c: c ** 2)
             },
             BENCH.FORWARD: {},
             BENCH.SOLVE: {},
             BENCH.OVERHEAD: {
-                BENCH.FUNC_GEN  : (lambda c: NDFourier(2 ** c))
+                BENCH.FUNC_GEN  : (lambda c: NDFourier(2 ** c, 2 ** c)),
+                BENCH.FUNC_SIZE : (lambda c: 2 ** (2 * c))
             },
             BENCH.DTYPES: {
-                BENCH.FUNC_GEN  : (lambda c, datatype: NDFourier(2 ** c))
+                BENCH.FUNC_GEN  : (lambda c, datatype: NDFourier(2 ** c,
+                												 2 ** c)),
+                BENCH.FUNC_SIZE : (lambda c: 2 ** (2 * c))
             }
         }
 
