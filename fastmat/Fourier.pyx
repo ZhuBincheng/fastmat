@@ -50,7 +50,7 @@ cdef class Fourier(Matrix):
     def __init__(self, order, **options):
         '''Initialize Matrix instance with a list of child matrices'''
         cdef intsize paddedSize
-        cdef np.ndarray arrSamples, vecConv
+        cdef np.ndarray arrSamplesSqr, vecConv
 
         cdef bint optimize = options.get('optimize', True)
         cdef int maxStage = options.get('maxStage', 4)
@@ -83,13 +83,13 @@ cdef class Fourier(Matrix):
         if self._numL > 0:
 
             # create the sampling grid
-            arrSamples = np.linspace(0, self.order - 1, self.order)
+            arrSamplesSqr = np.arange(self.order) ** 2
 
             # evaluate at these samples for the first numL elements
             # of the vector
             vecConv = _arrZero(1, self._numL, 1, np.NPY_COMPLEX128)
             vecConv[: self.order] = np.exp(
-                +1j * (arrSamples ** 2) * np.pi / self.order)
+                +1j * arrSamplesSqr * np.pi / self.order)
 
             # now put a flipped version of the above at the very end to get
             # a circular convolution
@@ -98,7 +98,7 @@ cdef class Fourier(Matrix):
             # get a premultiplication array for preprocessing before the
             # convolution
             self._preMult = np.exp(
-                -1j * (arrSamples ** 2) * np.pi / self.order)
+                -1j * arrSamplesSqr * np.pi / self.order)
 
             # transfer function of convolution
             self._vecConvHat = np.fft.fft(vecConv)
@@ -148,46 +148,17 @@ cdef class Fourier(Matrix):
         if self._numL == 0:
             arrRes = np.fft.fft(arrX, axis=0)
         else:
-            arrRes = _arrEmpty(
-                2, self._numL, M,
-                typeInfo[self._info.dtype.promote[_getFType(arrX)]].typeNum)
-            strideInit(&strResPadding, arrRes, 0)
-            strideSliceElements(&strResPadding, self.order, -1, 1)
-            opZeroVectors(&strResPadding)
-
-            arrRes[:self.order, :] = (self._preMult.T * arrX.T).T
-
-            arrRes = (self._vecConvHat.T * np.fft.fft(arrRes, axis=0).T).T
-
-            arrRes = (self._preMult.T *
-                      np.fft.ifft(arrRes, axis=0)[:self.order, :].T).T
+            arrRes = (self._preMult.T * np.fft.ifft(
+                (self._vecConvHat.T * np.fft.fft(
+                    (self._preMult.T * arrX.T).T, self._numL, axis=0).T).T,
+                axis=0)[:self.order, :].T).T
 
         return arrRes
 
     cpdef np.ndarray _backward(self, np.ndarray arrX):
         '''Calculate the backward transform of this matrix'''
-        cdef np.ndarray arrRes
-        cdef STRIDE_s strResPadding
-        cdef intsize mm, M = arrX.shape[1]
 
-        if self._numL == 0:
-            arrRes = np.fft.fft(_conjugate(arrX), axis=0)
-        else:
-            arrRes = _arrEmpty(
-                2, self._numL, M,
-                typeInfo[self._info.dtype.promote[_getFType(arrX)]].typeNum)
-
-            strideInit(&strResPadding, arrRes, 0)
-            strideSliceElements(&strResPadding, self.order, -1, 1)
-            opZeroVectors(&strResPadding)
-
-            arrRes[:self.order, :] = (self._preMult.T * _conjugate(arrX).T).T
-
-            arrRes = (self._vecConvHat.T * np.fft.fft(arrRes, axis=0).T).T
-
-            arrRes = (self._preMult.T *
-                      np.fft.ifft(arrRes, axis=0)[:self.order, :].T).T
-
+        cdef np.ndarray arrRes = self._forward(_conjugate(arrX))
         _conjugateInplace(arrRes)
         return arrRes
 
